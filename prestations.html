@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nos prestations — Au Paradis de Nany, Auvergne</title>
+<meta name="description" content="Repas maison, produits de la ferme, visite avec traite des vaches, ramassage des œufs, location de luge : découvrez nos prestations au Paradis de Nany.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --nuit: #2b2c22;
+    --nuit-2: #363824;
+    --creme: #f4ecd8;
+    --blanc: #fbf7ec;
+    --miel: #d9a441;
+    --miel-clair: #e8bd6b;
+    --mousse: #5c6b45;
+    --mousse-fonce: #414b32;
+    --terre: #7a5738;
+    --ligne: rgba(43,44,34,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--creme);
+    color:var(--nuit);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    pointer-events:none;z-index:999;
+    opacity:0.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:multiply;
+  }
+  h1,h2,h3,.display{font-family:'Fraunces', serif;font-weight:500;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;}
+
+  /* ---------- FOND AMBIANT ---------- */
+  #ambient-canvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0;}
+  #fx-layer{position:fixed;inset:0;pointer-events:none;z-index:500;}
+  .hay-blade{position:fixed;width:4px;height:17px;background:linear-gradient(var(--mousse), var(--miel-clair));border-radius:2px 2px 0 0;transform-origin:bottom center;animation:hayFly .85s ease-out forwards;}
+  @keyframes hayFly{0%{transform:translate(0,0) rotate(0deg);opacity:1;}100%{transform:translate(var(--dx), var(--dy)) rotate(var(--rot));opacity:0;}}
+
+  /* ---------- NAV ---------- */
+  header{position:fixed;top:0;left:0;right:0;z-index:200;padding:22px 0;transition:background .4s ease, padding .4s ease, box-shadow .4s ease;}
+  header.scrolled{background:rgba(244,236,216,0.92);backdrop-filter:blur(8px);padding:14px 0;box-shadow:0 1px 0 var(--ligne);}
+  nav{display:flex;align-items:center;justify-content:space-between;}
+  .logo{font-family:'Fraunces', serif;font-size:1.25rem;font-weight:600;}
+  header.scrolled .logo{color:var(--nuit);}
+  header:not(.scrolled) .logo{color:var(--blanc);}
+  .nav-links{display:flex;gap:38px;font-size:0.92rem;letter-spacing:0.02em;}
+  header.scrolled .nav-links a{color:var(--nuit);}
+  header:not(.scrolled) .nav-links a{color:var(--blanc);}
+  .nav-links a{position:relative;padding-bottom:4px;}
+  .nav-links a.actif{font-weight:500;}
+  header.scrolled .nav-links a.actif{color:var(--mousse-fonce);}
+  header:not(.scrolled) .nav-links a.actif{color:var(--miel-clair);}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:currentColor;transition:width .3s ease;}
+  .nav-links a:hover::after{width:100%;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:100px;font-size:0.88rem;font-weight:500;transition:transform .25s ease, box-shadow .25s ease, background .25s ease;cursor:pointer;border:1px solid transparent;}
+  .btn-miel{background:var(--miel);color:var(--nuit);}
+  .btn-miel:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(217,164,65,0.35);}
+  .btn-ligne{border-color:currentColor;}
+  .btn-ligne:hover{background:rgba(43,44,34,0.06);transform:translateY(-2px);}
+
+  .menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;z-index:210;}
+  .menu-toggle span{display:block;width:24px;height:2px;background:currentColor;margin:5px 0;transition:transform .3s ease, opacity .3s ease;}
+  header:not(.scrolled) .menu-toggle{color:var(--blanc);}
+  header.scrolled .menu-toggle{color:var(--nuit);}
+  .menu-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .menu-toggle.open span:nth-child(2){opacity:0;}
+  .menu-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  .mobile-nav{position:fixed;inset:0;background:var(--nuit);z-index:250;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;transform:translateY(-100%);transition:transform .4s cubic-bezier(.2,.7,.3,1);}
+  .mobile-nav.open{transform:translateY(0);}
+  .mobile-nav a{color:var(--creme);font-family:'Fraunces', serif;font-size:1.7rem;}
+  .mobile-nav a.actif{color:var(--miel-clair);}
+  .mobile-nav .btn-miel{margin-top:14px;}
+
+  /* ---------- PAGE HERO ---------- */
+  .page-hero{position:relative;height:100svh;min-height:620px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:0;}
+  .page-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.08);animation:heroZoom 18s ease-out forwards;}
+  @keyframes heroZoom{to{transform:scale(1);}}
+  .page-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(30,28,18,0.4) 0%, rgba(30,28,18,0.22) 45%, rgba(25,24,15,0.65) 100%);}
+  .page-hero-content{position:relative;z-index:2;text-align:center;color:var(--blanc);}
+  .page-hero .eyebrow{justify-content:center;color:var(--miel-clair);font-size:0.82rem;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+  .page-hero .eyebrow .trait{width:32px;height:1px;background:var(--miel-clair);}
+  .page-hero h1{font-size:clamp(2.4rem, 5.5vw, 4rem);}
+  .page-hero .hero-slogan{margin-top:18px;font-size:1.05rem;font-style:italic;font-family:'Fraunces', serif;color:var(--creme);opacity:0.9;}
+
+  /* ---------- BANDE STATS ---------- */
+  .tags-row{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
+  .tag{font-size:0.92rem;padding:11px 22px;border-radius:100px;border:1px solid var(--ligne);color:var(--mousse-fonce);background:var(--blanc);}
+
+  /* ---------- SECTIONS ---------- */
+  section{position:relative;padding:110px 0;}
+  .section-tight{padding:80px 0;}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .kicker{display:flex;align-items:center;gap:12px;font-size:0.8rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--mousse-fonce);margin-bottom:20px;}
+  .kicker::before{content:"";width:26px;height:1px;background:var(--mousse-fonce);}
+
+  .intro-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:80px;align-items:center;}
+  .intro-grid.reverse{grid-template-columns:0.9fr 1.1fr;}
+  .intro-grid.reverse .frame-photo{order:-1;}
+  .intro-grid h2{font-size:clamp(1.9rem, 3vw, 2.6rem);line-height:1.15;margin-bottom:22px;}
+  .intro-grid p{font-size:1.02rem;opacity:0.85;max-width:48ch;}
+  .intro-grid p + p{margin-top:14px;}
+  .frame-photo{position:relative;border-radius:6px;overflow:hidden;}
+  .frame-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .frame-photo::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.15);}
+
+  /* ---------- DUO / TRIO PHOTOS ---------- */
+  .duo-photos{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:56px;}
+  .duo-photos .frame-photo{aspect-ratio:4/3;}
+  .trio-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:56px;}
+  .trio-item .frame-photo{aspect-ratio:3/4;}
+  .trio-item figcaption{margin-top:14px;text-align:center;}
+  .trio-item h3{font-size:1rem;font-family:'Fraunces', serif;font-weight:500;}
+  .trio-item p{font-size:0.85rem;opacity:0.65;margin-top:4px;}
+
+  /* ---------- SERVICES (checklist) ---------- */
+  .bande{background:var(--nuit);color:var(--creme);}
+  .bande .kicker{color:var(--miel-clair);}
+  .bande .kicker::before{background:var(--miel-clair);}
+  .bande h2{max-width:22ch;font-size:clamp(1.9rem, 3vw, 2.5rem);}
+  .checklist{margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:0 60px;}
+  .check-item{display:flex;gap:16px;padding:20px 0;border-top:1px solid rgba(244,236,216,0.14);font-size:1.02rem;}
+  .check-item:nth-last-child(-n+2){border-bottom:1px solid rgba(244,236,216,0.14);}
+  .check-item .mark{color:var(--miel-clair);flex-shrink:0;}
+  .check-item span.txt{opacity:0.85;}
+
+  /* ---------- FERME ---------- */
+  .zen{background:var(--mousse-fonce);color:var(--creme);}
+  .zen-wrap{display:grid;grid-template-columns:0.85fr 1.15fr;gap:70px;align-items:center;}
+  .zen h2{font-size:clamp(1.9rem,3vw,2.6rem);line-height:1.15;}
+  .zen p{opacity:0.88;max-width:50ch;margin-top:20px;font-size:1.02rem;}
+  .zen .frame-photo{aspect-ratio:4/5;}
+  .duo-cards{margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .duo-card{background:rgba(244,236,216,0.06);border:1px solid rgba(244,236,216,0.18);border-radius:8px;padding:24px;}
+  .duo-card h4{font-family:'Fraunces', serif;font-size:1.05rem;margin-bottom:8px;color:var(--miel-clair);}
+  .duo-card p{font-size:0.9rem;opacity:0.75;margin:0;}
+
+  /* ---------- CTA FINALE ---------- */
+  .cta-finale{position:relative;padding:0;height:480px;overflow:hidden;}
+  .cta-finale img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .cta-finale::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(27,26,17,0.55), rgba(27,26,17,0.82));}
+  .cta-finale-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--blanc);padding:0 24px;}
+  .cta-finale-content h2{font-size:clamp(1.9rem,3.6vw,2.8rem);max-width:18ch;}
+  .cta-finale-content .hero-actions{margin-top:30px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+
+  footer{background:var(--nuit);color:rgba(244,236,216,0.65);padding:50px 0 30px;font-size:0.85rem;}
+  .footer-top{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:30px;border-bottom:1px solid rgba(244,236,216,0.14);flex-wrap:wrap;gap:24px;}
+  .footer-top .logo{color:var(--creme);}
+  .footer-links{display:flex;gap:30px;}
+  .footer-bottom{padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;opacity:0.7;}
+
+  @media (max-width:900px){
+    .nav-links{display:none;}
+    .menu-toggle{display:block;}
+    .intro-grid, .zen-wrap{grid-template-columns:1fr;gap:32px;}
+    .intro-grid.reverse .frame-photo{order:2 !important;}
+    .intro-grid.reverse > div:first-child{order:1 !important;}
+    .checklist{grid-template-columns:1fr;}
+    .duo-cards{grid-template-columns:1fr;}
+    .duo-photos, .trio-photos{grid-template-columns:1fr;}
+    section{padding:70px 0;}
+    .page-hero{height:78vh;min-height:460px;}
+    .cta-finale{height:400px;}
+  }
+
+  @media (max-width:600px){
+    .logo{font-size:1rem;}
+    header .btn-miel{padding:9px 16px;font-size:0.78rem;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="ambient-canvas"></canvas>
+<div id="fx-layer"></div>
+
+<header id="site-header">
+  <div class="wrap">
+    <nav>
+      <a href="index.html" class="logo">Au Paradis de Nany</a>
+      <div class="nav-links">
+        <a href="gite.html">Le gîte</a>
+        <a href="prestations.html" class="actif">Nos prestations</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <a href="https://fr.airbnb.ch/rooms/1064290954527875930?source_impression_id=p3_1783518078_P3KPmQRzDxSf5zo1" target="_blank" rel="noopener" class="btn btn-miel">Réservez</a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="gite.html">Le gîte</a>
+  <a href="prestations.html" class="actif">Nos prestations</a>
+  <a href="contact.html">Contact</a>
+  <a href="https://fr.airbnb.ch/rooms/1064290954527875930?source_impression_id=p3_1783518078_P3KPmQRzDxSf5zo1" target="_blank" rel="noopener" class="btn btn-miel">Réservez</a>
+</div>
+
+<section class="page-hero">
+  <img src="images/prestations-1.jpg" alt="Une vache dans le pré près du gîte" class="page-hero-img">
+  <div class="page-hero-content wrap">
+    <div class="eyebrow"><span class="trait"></span> Au Paradis de Nany</div>
+    <h1>Nos prestations</h1>
+    <p class="hero-slogan">Des repas maison, la ferme à côté, et rien à organiser</p>
+  </div>
+</section>
+
+<section class="section-tight" style="padding:56px 0;border-bottom:1px solid var(--ligne);">
+  <div class="wrap">
+    <div class="tags-row reveal">
+      <span class="tag">Repas maison sur demande</span>
+      <span class="tag">Produits de la ferme</span>
+      <span class="tag">Traite des vaches le soir</span>
+      <span class="tag">Location de luge l'hiver</span>
+    </div>
+  </div>
+</section>
+
+<section id="repas">
+  <div class="wrap">
+    <div class="intro-grid reveal">
+      <div>
+        <div class="kicker">Le plat du jour</div>
+        <h2>Un repas différent chaque jour, préparé avec amour.</h2>
+        <p>Chaque jour, sur demande, nous vous proposons un plat différent, préparé uniquement avec des produits locaux et frais : courges farcies, quiche maison, gratin dauphinois, plateaux à partager… De quoi découvrir les saveurs authentiques de l'Auvergne sans avoir à cuisiner.</p>
+        <p>Rien n'est obligatoire : vous choisissez ce que vous voulez, quand vous le voulez.</p>
+      </div>
+      <div class="frame-photo" style="aspect-ratio:4/5;">
+        <img src="images/prestations-2.jpg" alt="Courges farcies maison et soupe, préparées pour les hôtes du gîte">
+      </div>
+    </div>
+    <div class="duo-photos reveal">
+      <div class="frame-photo"><img src="images/prestations-3.jpg" alt="Quiche aux poireaux, saucisses grillées, gratin dauphinois et salade de fruits"></div>
+      <div class="frame-photo"><img src="images/prestations-4.jpg" alt="Plats maison en préparation sur la cuisinière"></div>
+    </div>
+    <div class="frame-photo reveal" style="aspect-ratio:21/9;margin-top:22px;">
+      <img src="images/prestations-5.jpg" alt="Planche de charcuterie, fromages et burgers maison">
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap">
+    <div class="intro-grid reverse reveal">
+      <div>
+        <div class="kicker">Produits maison</div>
+        <h2>Confitures, yaourts, douceurs faites ici.</h2>
+        <p>Nous mettons un point d'honneur à partager avec vous le meilleur de notre savoir-faire : yaourts fermiers, confitures maison, desserts aux fruits du jardin. Une manière simple et gourmande de prolonger l'expérience du lieu.</p>
+      </div>
+      <div class="frame-photo" style="aspect-ratio:4/5;">
+        <img src="images/prestations-6.jpg" alt="Yaourts maison et lait frais de la ferme">
+      </div>
+    </div>
+    <div class="duo-photos reveal">
+      <div class="frame-photo"><img src="images/prestations-7.jpg" alt="Desserts et brioches maison sortant du four"></div>
+      <div class="frame-photo"><img src="images/prestations-8.jpg" alt="Verrine de yaourt maison et fruits rouges"></div>
+    </div>
+  </div>
+</section>
+
+<section class="zen">
+  <div class="wrap">
+    <div class="zen-wrap">
+      <div class="frame-photo reveal">
+        <img src="images/prestations-9.jpg" alt="Un moment gourmand au gîte">
+      </div>
+      <div class="reveal">
+        <div class="kicker">La ferme, en vrai</div>
+        <h2>Traite, œufs et compagnie.</h2>
+        <p>Venez partager un moment chaleureux à la ferme : la traite des vaches en soirée, et le ramassage des œufs de poules le matin. Petits et grands découvrent ensemble d'où viennent le lait et les œufs, dans une ambiance conviviale et éducative.</p>
+        <div class="duo-cards">
+          <div class="duo-card">
+            <h4>Traite à la ferme</h4>
+            <p>En soirée, découvrez d'où vient le lait, dans une ambiance simple et conviviale.</p>
+          </div>
+          <div class="duo-card">
+            <h4>Ramassage des œufs</h4>
+            <p>Un petit rituel simple et amusant pour petits et grands.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bande">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">Récapitulatif</div>
+      <h2>Toutes nos prestations, en un coup d'œil.</h2>
+    </div>
+    <div class="checklist reveal">
+      <div class="check-item"><span class="mark">✦</span><span class="txt">Plat du jour, sur demande, préparé avec des produits locaux</span></div>
+      <div class="check-item"><span class="mark">✦</span><span class="txt">Collations et plateaux à partager</span></div>
+      <div class="check-item"><span class="mark">✦</span><span class="txt">Produits de la ferme : yaourts, confitures, œufs frais</span></div>
+      <div class="check-item"><span class="mark">✦</span><span class="txt">Visite de la ferme avec traite des vaches, en soirée</span></div>
+      <div class="check-item"><span class="mark">✦</span><span class="txt">Ramassage des œufs de poules</span></div>
+      <div class="check-item"><span class="mark">✦</span><span class="txt">Location de luge l'hiver</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap" style="text-align:center;">
+    <div class="reveal">
+      <div class="kicker" style="justify-content:center;">Envie d'en voir plus</div>
+      <h2 style="font-size:clamp(1.8rem,3vw,2.4rem);max-width:26ch;margin:0 auto 26px;">Envie de voir plus de photos du gîte et de nos plats maison ?</h2>
+      <a href="contact.html#photos" class="btn btn-miel">Voir toutes les photos</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta-finale">
+  <img src="images/prestations-10.jpg" alt="Un plat maison au Paradis de Nany">
+  <div class="cta-finale-content">
+    <div class="kicker" style="color:var(--miel-clair);justify-content:center;"><span class="trait" style="background:var(--miel-clair);"></span>Sur demande</div>
+    <h2>Envie d'un repas sans avoir à cuisiner ?</h2>
+    <div class="hero-actions">
+      <a href="contact.html" class="btn btn-miel">Nous contacter</a>
+      <a href="gite.html" class="btn btn-ligne" style="color:var(--blanc);">Voir le gîte</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <a href="index.html" class="logo">Au Paradis de Nany</a>
+      <div class="footer-links">
+        <a href="gite.html">Le gîte</a>
+        <a href="prestations.html">Nos prestations</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Roussières, Avèze — Auvergne</span>
+      <span>© 2026 Au Paradis de Nany · <a href="mentions-legales.html">Mentions légales</a> · Site par <a href="https://clicsight.fr" target="_blank" rel="noopener">@clicsight</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const header = document.getElementById('site-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 60);
+  }, {passive:true});
+
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileNav = document.getElementById('mobile-nav');
+  menuToggle.addEventListener('click', () => {
+    menuToggle.classList.toggle('open');
+    mobileNav.classList.toggle('open');
+  });
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menuToggle.classList.remove('open');
+    mobileNav.classList.remove('open');
+  }));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  (function(){
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    const N = window.innerWidth < 700 ? 22 : 46;
+    const parts = Array.from({length:N}, () => ({
+      x: Math.random()*w, y: Math.random()*h, r: 1 + Math.random()*2.4,
+      speed: 0.12 + Math.random()*0.3, phase: Math.random()*Math.PI*2, alpha: 0.2 + Math.random()*0.45
+    }));
+    function tick(){
+      ctx.clearRect(0,0,w,h);
+      parts.forEach(p => {
+        p.y -= p.speed;
+        p.x += Math.sin(p.phase + p.y*0.008) * 0.35;
+        if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
+        ctx.globalAlpha = p.alpha; ctx.fillStyle = '#d9a441';
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  (function(){
+    const fx = document.getElementById('fx-layer');
+    function burst(x, y){
+      for(let i = 0; i < 12; i++){
+        const blade = document.createElement('div');
+        blade.className = 'hay-blade';
+        const angle = Math.random()*140 - 70;
+        const dist = 45 + Math.random()*55;
+        const dx = Math.sin(angle*Math.PI/180) * dist;
+        const dy = -(55 + Math.random()*45);
+        blade.style.left = x + 'px'; blade.style.top = y + 'px';
+        blade.style.setProperty('--dx', dx + 'px');
+        blade.style.setProperty('--dy', dy + 'px');
+        blade.style.setProperty('--rot', (Math.random()*360) + 'deg');
+        fx.appendChild(blade);
+        setTimeout(() => blade.remove(), 900);
+      }
+    }
+    document.querySelectorAll('.btn-miel').forEach(btn => {
+      btn.addEventListener('click', (e) => burst(e.clientX, e.clientY));
+    });
+  })();
+</script>
+</body>
+</html>

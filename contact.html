@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Au Paradis de Nany, Auvergne</title>
+<meta name="description" content="Une question, une envie de réserver ? Contactez Anne-Marie pour votre séjour au Paradis de Nany, gîte au pied du Puy de Sancy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --nuit: #2b2c22;
+    --nuit-2: #363824;
+    --creme: #f4ecd8;
+    --blanc: #fbf7ec;
+    --miel: #d9a441;
+    --miel-clair: #e8bd6b;
+    --mousse: #5c6b45;
+    --mousse-fonce: #414b32;
+    --terre: #7a5738;
+    --ligne: rgba(43,44,34,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--creme);
+    color:var(--nuit);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    pointer-events:none;z-index:999;
+    opacity:0.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:multiply;
+  }
+  h1,h2,h3,.display{font-family:'Fraunces', serif;font-weight:500;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;position:relative;}
+
+  #ambient-canvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0;}
+  #fx-layer{position:fixed;inset:0;pointer-events:none;z-index:500;}
+  .hay-blade{position:fixed;width:4px;height:17px;background:linear-gradient(var(--mousse), var(--miel-clair));border-radius:2px 2px 0 0;transform-origin:bottom center;animation:hayFly .85s ease-out forwards;}
+  @keyframes hayFly{0%{transform:translate(0,0) rotate(0deg);opacity:1;}100%{transform:translate(var(--dx), var(--dy)) rotate(var(--rot));opacity:0;}}
+
+  header{position:fixed;top:0;left:0;right:0;z-index:200;padding:22px 0;transition:background .4s ease, padding .4s ease, box-shadow .4s ease;}
+  header.scrolled{background:rgba(244,236,216,0.92);backdrop-filter:blur(8px);padding:14px 0;box-shadow:0 1px 0 var(--ligne);}
+  nav{display:flex;align-items:center;justify-content:space-between;}
+  .logo{font-family:'Fraunces', serif;font-size:1.25rem;font-weight:600;}
+  header.scrolled .logo{color:var(--nuit);}
+  header:not(.scrolled) .logo{color:var(--blanc);}
+  .nav-links{display:flex;gap:38px;font-size:0.92rem;letter-spacing:0.02em;}
+  header.scrolled .nav-links a{color:var(--nuit);}
+  header:not(.scrolled) .nav-links a{color:var(--blanc);}
+  .nav-links a{position:relative;padding-bottom:4px;}
+  .nav-links a.actif{font-weight:500;}
+  header.scrolled .nav-links a.actif{color:var(--mousse-fonce);}
+  header:not(.scrolled) .nav-links a.actif{color:var(--miel-clair);}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:currentColor;transition:width .3s ease;}
+  .nav-links a:hover::after{width:100%;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:100px;font-size:0.88rem;font-weight:500;transition:transform .25s ease, box-shadow .25s ease, background .25s ease;cursor:pointer;border:1px solid transparent;}
+  .btn-miel{background:var(--miel);color:var(--nuit);}
+  .btn-miel:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(217,164,65,0.35);}
+  .btn-ligne{border-color:currentColor;}
+  .btn-ligne:hover{background:rgba(43,44,34,0.06);transform:translateY(-2px);}
+
+  .menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;z-index:210;}
+  .menu-toggle span{display:block;width:24px;height:2px;background:currentColor;margin:5px 0;transition:transform .3s ease, opacity .3s ease;}
+  header:not(.scrolled) .menu-toggle{color:var(--blanc);}
+  header.scrolled .menu-toggle{color:var(--nuit);}
+  .menu-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .menu-toggle.open span:nth-child(2){opacity:0;}
+  .menu-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  .mobile-nav{position:fixed;inset:0;background:var(--nuit);z-index:250;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;transform:translateY(-100%);transition:transform .4s cubic-bezier(.2,.7,.3,1);}
+  .mobile-nav.open{transform:translateY(0);}
+  .mobile-nav a{color:var(--creme);font-family:'Fraunces', serif;font-size:1.7rem;}
+  .mobile-nav a.actif{color:var(--miel-clair);}
+  .mobile-nav .btn-miel{margin-top:14px;}
+
+  .page-hero{position:relative;height:64vh;min-height:440px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:0;}
+  .page-hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.08);animation:heroZoom 18s ease-out forwards;}
+  @keyframes heroZoom{to{transform:scale(1);}}
+  .page-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(30,28,18,0.4) 0%, rgba(30,28,18,0.22) 45%, rgba(25,24,15,0.65) 100%);}
+  .page-hero-content{position:relative;z-index:2;text-align:center;color:var(--blanc);}
+  .page-hero .eyebrow{justify-content:center;color:var(--miel-clair);font-size:0.82rem;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+  .page-hero .eyebrow .trait{width:32px;height:1px;background:var(--miel-clair);}
+  .page-hero h1{font-size:clamp(2.2rem, 5vw, 3.6rem);}
+  .page-hero .hero-slogan{margin-top:18px;font-size:1.05rem;font-style:italic;font-family:'Fraunces', serif;color:var(--creme);opacity:0.9;}
+
+  section{position:relative;padding:100px 0;}
+  .section-tight{padding:70px 0;}
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .kicker{display:flex;align-items:center;gap:12px;font-size:0.8rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--mousse-fonce);margin-bottom:20px;}
+  .kicker::before{content:"";width:26px;height:1px;background:var(--mousse-fonce);}
+
+  /* ---------- CONTACT GRID ---------- */
+  .contact-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:70px;align-items:start;}
+  .contact-grid h2{font-size:clamp(1.9rem,3vw,2.5rem);margin-bottom:18px;}
+  .contact-grid > div > p.lead{font-size:1.02rem;opacity:0.8;max-width:46ch;margin-bottom:36px;}
+
+  .field{margin-bottom:20px;}
+  .field label{display:block;font-size:0.85rem;letter-spacing:0.03em;margin-bottom:8px;color:var(--mousse-fonce);font-weight:500;}
+  .field input, .field select, .field textarea{
+    width:100%;
+    padding:14px 16px;
+    border:1px solid var(--ligne);
+    border-radius:6px;
+    background:var(--blanc);
+    font-family:'Work Sans', sans-serif;
+    font-size:0.98rem;
+    color:var(--nuit);
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:none;
+    border-color:var(--mousse);
+    box-shadow:0 0 0 3px rgba(92,107,69,0.14);
+  }
+  .field textarea{resize:vertical;min-height:130px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .form-note{font-size:0.82rem;opacity:0.6;margin-top:14px;}
+  .form-submit{margin-top:8px;}
+
+  /* ---------- INFOS CARD ---------- */
+  .infos-card{background:var(--nuit);color:var(--creme);border-radius:10px;padding:40px 36px;}
+  .infos-card .kicker{color:var(--miel-clair);}
+  .infos-card .kicker::before{background:var(--miel-clair);}
+  .infos-card h3{font-size:1.4rem;margin-bottom:8px;}
+  .infos-card p{opacity:0.8;font-size:0.95rem;margin-bottom:28px;}
+  .infos-item{display:flex;align-items:flex-start;gap:14px;padding:18px 0;border-top:1px solid rgba(244,236,216,0.14);}
+  .infos-item:last-of-type{border-bottom:1px solid rgba(244,236,216,0.14);margin-bottom:28px;}
+  .infos-item .ico{color:var(--miel-clair);font-family:'Fraunces', serif;font-size:1.1rem;flex-shrink:0;width:24px;}
+  .infos-item .txt-label{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;opacity:0.6;margin-bottom:3px;}
+  .infos-item .txt-value{font-size:1.05rem;}
+  .infos-item a{border-bottom:1px solid rgba(244,236,216,0.3);transition:border-color .2s ease;}
+  .infos-item a:hover{border-color:var(--miel-clair);}
+
+  /* ---------- GALERIE PHOTO ---------- */
+  .galerie-masonry{column-count:3;column-gap:16px;}
+  .galerie-masonry .frame-photo{margin-bottom:16px;break-inside:avoid;border-radius:6px;overflow:hidden;}
+  .galerie-masonry img{width:100%;display:block;}
+
+  .frame-photo{position:relative;}
+  .frame-photo::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.15);}
+
+  footer{background:var(--nuit);color:rgba(244,236,216,0.65);padding:50px 0 30px;font-size:0.85rem;}
+  .footer-top{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:30px;border-bottom:1px solid rgba(244,236,216,0.14);flex-wrap:wrap;gap:24px;}
+  .footer-top .logo{color:var(--creme);}
+  .footer-links{display:flex;gap:30px;}
+  .footer-bottom{padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;opacity:0.7;}
+
+  @media (max-width:900px){
+    .nav-links{display:none;}
+    .menu-toggle{display:block;}
+    .contact-grid{grid-template-columns:1fr;gap:40px;}
+    .field-row{grid-template-columns:1fr;}
+    .galerie-masonry{column-count:2;}
+    section{padding:64px 0;}
+    .page-hero{height:52vh;min-height:380px;}
+  }
+  @media (max-width:520px){
+    .galerie-masonry{column-count:1;}
+  }
+
+  @media (max-width:600px){
+    .logo{font-size:1rem;}
+    header .btn-miel{padding:9px 16px;font-size:0.78rem;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="ambient-canvas"></canvas>
+<div id="fx-layer"></div>
+
+<header id="site-header">
+  <div class="wrap">
+    <nav>
+      <a href="index.html" class="logo">Au Paradis de Nany</a>
+      <div class="nav-links">
+        <a href="gite.html">Le gîte</a>
+        <a href="prestations.html">Nos prestations</a>
+        <a href="contact.html" class="actif">Contact</a>
+      </div>
+      <a href="https://fr.airbnb.ch/rooms/1064290954527875930?source_impression_id=p3_1783518078_P3KPmQRzDxSf5zo1" target="_blank" rel="noopener" class="btn btn-miel">Réservez</a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobile-nav">
+  <a href="gite.html">Le gîte</a>
+  <a href="prestations.html">Nos prestations</a>
+  <a href="contact.html" class="actif">Contact</a>
+  <a href="https://fr.airbnb.ch/rooms/1064290954527875930?source_impression_id=p3_1783518078_P3KPmQRzDxSf5zo1" target="_blank" rel="noopener" class="btn btn-miel">Réservez</a>
+</div>
+
+<section class="page-hero">
+  <img src="images/contact-1.jpg" alt="Le gîte Au Paradis de Nany, façade en pierre fleurie" class="page-hero-img">
+  <div class="page-hero-content wrap">
+    <div class="eyebrow"><span class="trait"></span> Roussières · Avèze</div>
+    <h1>Contact</h1>
+    <p class="hero-slogan">Une question, une envie de réserver ? Nous sommes là.</p>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="kicker">Écrivez-nous</div>
+        <h2>Posez-nous vos questions.</h2>
+        <p class="lead">Disponibilités, prestations, accès au gîte... Remplissez ce formulaire, votre message s'ouvrira directement dans votre messagerie, prêt à être envoyé.</p>
+
+        <form id="contact-form">
+          <div class="field-row">
+            <div class="field">
+              <label for="nom">Nom</label>
+              <input type="text" id="nom" name="nom" required>
+            </div>
+            <div class="field">
+              <label for="email">Votre e-mail</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="telephone">Téléphone (facultatif)</label>
+              <input type="tel" id="telephone" name="telephone">
+            </div>
+            <div class="field">
+              <label for="sujet">Sujet</label>
+              <select id="sujet" name="sujet">
+                <option value="Disponibilités et réservation">Disponibilités et réservation</option>
+                <option value="Question sur le gîte">Question sur le gîte</option>
+                <option value="Nos prestations">Nos prestations</option>
+                <option value="Autre question">Autre question</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="message">Votre message</label>
+            <textarea id="message" name="message" required placeholder="Dites-nous en un peu plus sur votre séjour..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-miel form-submit">Envoyer le message</button>
+          <p class="form-note">Ce bouton ouvre votre messagerie (Gmail, Outlook...) avec le message déjà prêt : il ne vous restera qu'à cliquer sur "Envoyer".</p>
+        </form>
+      </div>
+
+      <div class="reveal">
+        <div class="infos-card">
+          <div class="kicker">Coordonnées directes</div>
+          <h3>Anne-Marie</h3>
+          <p>Au Paradis de Nany, Roussières — Avèze</p>
+
+          <div class="infos-item">
+            <span class="ico">✆</span>
+            <div>
+              <div class="txt-label">Téléphone</div>
+              <div class="txt-value"><a href="tel:+33625009200">06 25 00 92 00</a></div>
+            </div>
+          </div>
+          <div class="infos-item">
+            <span class="ico">✉</span>
+            <div>
+              <div class="txt-label">E-mail</div>
+              <div class="txt-value"><a href="mailto:taverna.anne-marie@orange.fr">taverna.anne-marie@orange.fr</a></div>
+            </div>
+          </div>
+
+          <a href="https://fr.airbnb.ch/rooms/1064290954527875930?source_impression_id=p3_1783518078_P3KPmQRzDxSf5zo1" target="_blank" rel="noopener" class="btn btn-miel" style="width:100%;justify-content:center;">Réserver sur Airbnb</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight" id="photos">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="kicker">En images</div>
+      <h2 style="font-size:clamp(1.8rem,3vw,2.4rem);max-width:24ch;">Le gîte, la ferme, et tout ce qu'on y prépare.</h2>
+    </div>
+    <div class="galerie-masonry reveal">
+      <div class="frame-photo"><img loading="lazy" src="images/contact-2.jpg" alt="Le gîte au coucher du soleil"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-3.jpg" alt="Fraises fraîchement cueillies du jardin"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-4.jpg" alt="Plateau de fromages auvergnats"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-5.jpg" alt="Chambre du gîte"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-6.jpg" alt="Cageots d'abricots pour la confiture maison"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-7.jpg" alt="Une vache dans le pré voisin"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-8.jpg" alt="Tomates farcies, riz et œufs durs, repas maison"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-9.jpg" alt="Confiture d'abricots en préparation"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-10.jpg" alt="Cuisine équipée du gîte"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-11.jpg" alt="Burgers maison servis dans le jardin"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-12.jpg" alt="Pots de confiture d'abricots maison"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-13.jpg" alt="Le Puy de Sancy au coucher du soleil"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-14.jpg" alt="Préparation de verrines aux fraises"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-15.jpg" alt="Salle d'eau du gîte"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-16.jpg" alt="Portrait d'une vache montbéliarde près du gîte"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-17.jpg" alt="Le chemin d'accès au gîte"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-18.jpg" alt="Tracteur dans les champs au crépuscule"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-19.jpg" alt="Vaches et chèvres dans le pré, près du poulailler"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-20.jpg" alt="Une chèvre devant son abri"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-21.jpg" alt="Préparation de verrines maison aux fraises"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-22.jpg" alt="Assiette repas maison : salade, burger et pommes de terre"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-23.jpg" alt="Salades composées avec œuf mollet et toasts de chèvre"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-24.jpg" alt="Châtaignes ramassées près du gîte"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-25.jpg" alt="Tomates du jardin"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-26.jpg" alt="Panier de châtaignes"></div>
+      <div class="frame-photo"><img loading="lazy" src="images/contact-27.jpg" alt="La façade fleurie du gîte et son pain maison"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <a href="index.html" class="logo">Au Paradis de Nany</a>
+      <div class="footer-links">
+        <a href="gite.html">Le gîte</a>
+        <a href="prestations.html">Nos prestations</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>Roussières, Avèze — Auvergne</span>
+      <span>© 2026 Au Paradis de Nany · <a href="mentions-legales.html">Mentions légales</a> · Site par <a href="https://clicsight.fr" target="_blank" rel="noopener">@clicsight</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const header = document.getElementById('site-header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 60);
+  }, {passive:true});
+
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileNav = document.getElementById('mobile-nav');
+  menuToggle.addEventListener('click', () => {
+    menuToggle.classList.toggle('open');
+    mobileNav.classList.toggle('open');
+  });
+  mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    menuToggle.classList.remove('open');
+    mobileNav.classList.remove('open');
+  }));
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  (function(){
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    const N = window.innerWidth < 700 ? 22 : 46;
+    const parts = Array.from({length:N}, () => ({
+      x: Math.random()*w, y: Math.random()*h, r: 1 + Math.random()*2.4,
+      speed: 0.12 + Math.random()*0.3, phase: Math.random()*Math.PI*2, alpha: 0.2 + Math.random()*0.45
+    }));
+    function tick(){
+      ctx.clearRect(0,0,w,h);
+      parts.forEach(p => {
+        p.y -= p.speed;
+        p.x += Math.sin(p.phase + p.y*0.008) * 0.35;
+        if(p.y < -10){ p.y = h + 10; p.x = Math.random()*w; }
+        ctx.globalAlpha = p.alpha; ctx.fillStyle = '#d9a441';
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
+
+  (function(){
+    const fx = document.getElementById('fx-layer');
+    function burst(x, y){
+      for(let i = 0; i < 12; i++){
+        const blade = document.createElement('div');
+        blade.className = 'hay-blade';
+        const angle = Math.random()*140 - 70;
+        const dist = 45 + Math.random()*55;
+        const dx = Math.sin(angle*Math.PI/180) * dist;
+        const dy = -(55 + Math.random()*45);
+        blade.style.left = x + 'px'; blade.style.top = y + 'px';
+        blade.style.setProperty('--dx', dx + 'px');
+        blade.style.setProperty('--dy', dy + 'px');
+        blade.style.setProperty('--rot', (Math.random()*360) + 'deg');
+        fx.appendChild(blade);
+        setTimeout(() => blade.remove(), 900);
+      }
+    }
+    document.querySelectorAll('.btn-miel').forEach(btn => {
+      btn.addEventListener('click', (e) => burst(e.clientX, e.clientY));
+    });
+  })();
+
+  // ---- Formulaire : ouvre un e-mail pré-rempli (mailto) ----
+  document.getElementById('contact-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    const nom = document.getElementById('nom').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const telephone = document.getElementById('telephone').value.trim();
+    const sujet = document.getElementById('sujet').value;
+    const message = document.getElementById('message').value.trim();
+
+    const corps =
+      `Nom : ${nom}\n` +
+      `E-mail : ${email}\n` +
+      (telephone ? `Téléphone : ${telephone}\n` : '') +
+      `\nMessage :\n${message}`;
+
+    const lien = `mailto:taverna.anne-marie@orange.fr?subject=${encodeURIComponent('Site du gîte — ' + sujet)}&body=${encodeURIComponent(corps)}`;
+    window.location.href = lien;
+  });
+</script>
+</body>
+</html>
