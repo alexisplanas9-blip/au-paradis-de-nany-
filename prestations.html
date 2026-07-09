@@ -167,8 +167,8 @@
     .nav-links{display:none;}
     .menu-toggle{display:block;}
     .intro-grid, .zen-wrap{grid-template-columns:1fr;gap:32px;}
-    .intro-grid.reverse .frame-photo{order:2 !important;}
-    .intro-grid.reverse > div:first-child{order:1 !important;}
+    .intro-grid.reverse{display:flex;flex-direction:column;}
+    .intro-grid.reverse .frame-photo{order:1;}
     .checklist{grid-template-columns:1fr;}
     .duo-cards{grid-template-columns:1fr;}
     .duo-photos, .trio-photos{grid-template-columns:1fr;}
